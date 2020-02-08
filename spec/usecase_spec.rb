@@ -2,12 +2,11 @@
 
 RSpec.describe KUsecases::Usecase do
 
-  subject { KUsecases::Usecase.new('key1') }
+  subject { described_class.new('key1') }
 
   let(:descendant_parents) { double(parent_groups: []) }
 
   describe 'initialize' do
-
     it { is_expected.to have_attributes(key: 'key1', 
                                         title: '',
                                         usage: '',
@@ -82,6 +81,56 @@ RSpec.describe KUsecases::Usecase do
       it { is_expected.to have_attributes(usage: 'MyClass.load') }
 
       it { expect(subject.to_h).to include(usage: 'MyClass.load')}
+    end
+  end
+
+  describe 'build_content' do
+    before { subject.build_content(usecase_with_content) }
+
+    context 'usecase has no content' do
+
+      let(:usecase_with_content) { double("ExampleGroupUsecase", 
+                                        metadata: { usecase: true },
+                                        example_group: descendant_parents,
+                                        descendants: []) }
+
+      it { is_expected.to have_attributes(content_blocks: []) }
+
+      it { expect(subject.to_h).to include(content_blocks: [])}
+    end
+
+    context 'usecase has content' do
+      let(:content1) { { title: 'title 1', description: 'description 1', type: :code, code_type: :ruby} }
+      let(:content2) { { title: 'title 2', description: 'description 2'} }
+      let(:usecase_with_content) { double("ExampleGroupUsecase",
+                                        metadata: { usecase: true, content: [content1, content2] },
+                                        example_group: descendant_parents,
+                                        descendants: []) }
+
+      it 'content is valid' do 
+        expect(subject.content_blocks).to match_array([
+          have_attributes(title: 'title 1', description: 'description 1', type: :code, code_type: :ruby),
+          have_attributes(title: 'title 2', description: 'description 2', type: :text, code_type: '')
+        ]) 
+      end
+      # it do 
+      #   puts JSON.pretty_generate(subject.to_h)
+      # end
+      
+      it { expect(subject.to_h).to include("content_blocks": [
+        {
+          "title": "title 1",
+          "description": "description 1",
+          "type": :code,
+          "code_type": :ruby
+        },
+        {
+          "title": "title 2",
+          "description": "description 2",
+          "type": :text,
+          "code_type": ""
+        }
+      ])}
     end
   end
 end

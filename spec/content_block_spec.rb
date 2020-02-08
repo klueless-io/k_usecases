@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe KUsecases::ContentBlock do
-  subject { KUsecases::ContentBlock.parse(example) }
+  subject { described_class.parse(example) }
 
-  let(:content1) { { label: 'label 1', description: 'description 1'} }
-  let(:content2) { { label: 'label 2', description: 'description 2'} }
-  let(:content_no_description) { { label: 'label'} }
-  let(:content_no_label) { { description: 'description'} }
+  let(:content1) { { title: 'title 1', description: 'description 1', type: :code, code_type: :ruby} }
+  let(:content2) { { title: 'title 2', description: 'description 2'} }
+  let(:content_no_description) { { title: 'title'} }
+  let(:content_no_title) { { description: 'description'} }
   let(:content_no_data) { {} }
   let(:content_nil) { nil }
 
@@ -22,13 +22,35 @@ RSpec.describe KUsecases::ContentBlock do
 
       it 'has correct  content' do
         expect(subject).to match_array([
-          have_attributes(label: 'label 1', description: 'description 1'),
-          have_attributes(label: 'label 2', description: 'description 2')
+          have_attributes(title: 'title 1', description: 'description 1', type: :code, code_type: :ruby),
+          have_attributes(title: 'title 2', description: 'description 2', type: :text, code_type: '')
         ])
       end
 
       it 'has valid hash' do
-        expect(subject.first.to_h).to eq(label: 'label 1', description: 'description 1')
+        expect(subject.first.to_h).to eq(title: 'title 1', description: 'description 1', type: :code, code_type: :ruby)
+      end
+    end
+    context 'with missing type' do
+      let(:example) do
+        double(metadata: { content: [content2] })
+      end
+
+      it 'has correct content' do
+        expect(subject).to match_array([
+          have_attributes(type: :text)
+        ])
+      end
+    end
+    context 'with missing code_type' do
+      let(:example) do
+        double(metadata: { content: [content2] })
+      end
+
+      it 'has correct content' do
+        expect(subject).to match_array([
+          have_attributes(code_type: '')
+        ])
       end
     end
     context 'with missing description' do
@@ -36,32 +58,24 @@ RSpec.describe KUsecases::ContentBlock do
         double(metadata: { content: [content_no_description] })
       end
 
-      it 'has correct count' do
-        expect(subject.length).to eq(1)
-      end
-
       it 'has correct content' do
         expect(subject).to match_array([
-          have_attributes(label: 'label', description: '')
+          have_attributes(title: 'title', description: '')
         ])
       end
     end
-    context 'with missing label' do
+    context 'with missing title' do
       let(:example) do
-        double(metadata: { content: [content_no_label] })
-      end
-
-      it 'has correct count' do
-        expect(subject.length).to eq(1)
+        double(metadata: { content: [content_no_title] })
       end
 
       it 'has correct content' do
         expect(subject).to match_array([
-          have_attributes(label: '', description: 'description')
+          have_attributes(title: '', description: 'description')
         ])
       end
     end
-    context 'with missing label and description' do
+    context 'with missing title and description' do
       let(:example) do
         double(metadata: { content: [content_no_data] })
       end
@@ -78,7 +92,6 @@ RSpec.describe KUsecases::ContentBlock do
       it 'has no content' do
         expect(subject).to be_empty
       end
-
     end
   end
 end

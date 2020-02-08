@@ -15,7 +15,21 @@ module KUsecases
       @usage = ''
       @outcomes = []
       @content_blocks = []
-      @content_hash = {}
+    end
+
+    def self.parse(key, data)
+      usecase = Usecase.new(key)
+
+      usecase.build_title(data)
+      usecase.build_usage(data)
+      usecase.build_content(data)
+
+      # Loop through the it blocks
+      data.examples.each do |it|
+        usecase.add_outcome(it)
+      end
+
+      usecase
     end
 
     def to_h
@@ -23,14 +37,10 @@ module KUsecases
         key: key,
         title: title,
         usage: usage,
-        outcomes: outcomes.map { |o| o.to_h },
-        content_blocks: content_blocks
+        outcomes: outcomes.map { |outcome| outcome.to_h },
+        content_blocks: content_blocks.map { |block| block.to_h }
       }
     end
-
-    # def printable
-    #   @usage != ''
-    # end
 
     # def print
     #   puts description
@@ -44,18 +54,6 @@ module KUsecases
     #   content_blocks.each(&:print)
     #   puts '-' * 120
     # end
-
-    def add_content(group)
-      return if group.metadata[:content].nil? && !group.metadata[:content].is_a?(Array)
-
-      group.metadata[:content].each do |content|
-        key = "#{content[:label]}_#{content[:description]}"
-        next if @content_hash.key?(key)
-
-        @content_hash[key] = true
-        content_blocks << KtgContent.new(content)
-      end
-    end
 
     def add_outcome(example)
       outcome = KUsecases::Outcome.parse(example)

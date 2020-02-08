@@ -7,6 +7,7 @@ module KUsecases
 
     def self.parse(example)
       return nil if example.description.nil? || example.description.strip.length == 0
+      return nil if example.metadata[:content_block] && example.metadata[:content_block] == true
 
       Outcome.new(example.description) 
     end

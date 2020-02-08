@@ -3,6 +3,7 @@
 require 'pry'
 require 'bundler/setup'
 require 'k_usecases'
+require 'support/usecase_examples'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -21,11 +22,14 @@ RSpec.configure do |config|
   # ----------------------------------------------------------------------
 
   config.alias_example_group_to :usecase, usecase: true
+  config.alias_example_to :code, code: true, content_block: true
 
+  config.include UsecaseExamples
   config.extend KUsecases
 
   # config.include KUsecases
   config.before(:context, :usecases) do
+
     # puts self.class.children
 
     # puts '# -children-------------------------------------------------------------'
@@ -43,10 +47,12 @@ RSpec.configure do |config|
     # puts '# -parent_groups--------------------------------------------------------'
     # puts self.class.parent_groups
     # puts '# ----------------------------------------------------------------------'
-
-    @usecases = KUsecases::Usecases.new(self.class) if self.class.metadata[:usecases] == true
-    puts JSON.pretty_generate(@usecases.to_h)
-    # @usecases.debug
+    if self.class.metadata[:usecases] == true
+      @documentor = KUsecases::Documentor.new(self.class)
+    end
   end
 
+  config.after(:context, :usecases) do
+    @documentor.render
+  end
 end

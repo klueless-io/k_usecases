@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe KUsecases::Outcome do
-  subject { KUsecases::Outcome.parse(example) }
-
-  let(:example_empty) { double(description: '') }
+  subject { described_class.parse(example) }
 
   describe 'parse' do
     context 'valid outcome' do
-      let(:example) { double(description: 'test example') }
+      let(:example) { double(description: 'test example', metadata: {}) }
 
       it { is_expected.to have_attributes(description: 'test example') }
 
@@ -23,7 +21,13 @@ RSpec.describe KUsecases::Outcome do
     end
 
     context 'description is blank' do
-      let(:example) { double(description: nil) }
+      let(:example) { double(description: '') }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'this is a content_block and will be skipped' do
+      let(:example) { double(description: 'some content block', metadata: { content_block: true }) }
 
       it { is_expected.to be_nil }
     end
