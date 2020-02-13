@@ -18,6 +18,6 @@ guard :rspec, cmd: 'bundle exec rspec -f doc' do
   # Ruby files
   ruby = dsl.ruby
   dsl.watch_spec_files_for(ruby.lib_files)
-  watch(%r{^lib/k_usecases/(.+)\.rb$}) { |m| "spec/unit/#{m[1]}_spec.rb" }
-  watch(%r{^lib/k_usecases/commands/(.+)\.rb$}) { |m| "spec/unit/commands/#{m[1]}_spec.rb" }
+  watch(%r{^lib/k_usecases/(.+)\.rb$}) { |m| "spec/#{m[1]}_spec.rb" }
+  watch(%r{^lib/k_usecases/(.+)/(.+)\.rb$}) { |m| "spec/#{m[1]}/#{m[2]}_spec.rb" }
 end
