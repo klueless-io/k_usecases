@@ -5,21 +5,23 @@ RSpec.describe KUsecases::Usecase do
   subject { described_class.new('key1') }
 
   let(:descendant_parents) { double(parent_groups: []) }
+  let(:default_options) { [{'is_hr': false}] }
 
   describe 'initialize' do
     it { is_expected.to have_attributes(key: 'key1', 
                                         title: '',
                                         usage: '',
-                                        outcomes: [],
-                                        content_blocks: [])}
+                                        usage_description: '',
+                                        contents: [])}
 
     it 'valid hash' do
       expect(subject.to_h).to eq(
         key: 'key1',
         title: '',
+        summary: '',
         usage: '',
-        outcomes: [],
-        content_blocks: [])
+        usage_description: '',
+        contents: [])
     end
   end
 
@@ -35,7 +37,7 @@ RSpec.describe KUsecases::Usecase do
 
     context 'usecase has constructed title' do
 
-      let(:usecase_with_title) { double("ExampleGroupUsecase", 
+      let(:usecase_with_title) { double("ExampleGroup", 
                                         metadata: { usecase: true },
                                         example_group: descendant_parents,
                                         descendants: []) }
@@ -46,7 +48,7 @@ RSpec.describe KUsecases::Usecase do
     end
 
     context 'usecase has custom title' do
-      let(:usecase_with_title) { double("ExampleGroupUsecase",
+      let(:usecase_with_title) { double("ExampleGroup",
                                         metadata: { usecase: true, title: 'Custom Title' },
                                         example_group: descendant_parents,
                                         descendants: []) }
@@ -57,23 +59,38 @@ RSpec.describe KUsecases::Usecase do
     end
   end
 
-  describe 'build_usage' do
-    before { subject.build_usage(usecase_with_usage) }
+  describe 'build_attributes' do
+    before { subject.build_attributes(usecase_with_attibutes) }
 
-    context 'usecase has no usage' do
+    context 'usecase has no extra attributes' do
 
-      let(:usecase_with_usage) { double("ExampleGroupUsecase", 
+      let(:usecase_with_attibutes) { double("ExampleGroup", 
                                         metadata: { usecase: true },
                                         example_group: descendant_parents,
                                         descendants: []) }
 
+      it { is_expected.to have_attributes(summary: '') }
       it { is_expected.to have_attributes(usage: '') }
+      it { is_expected.to have_attributes(usage_description: '') }
 
+      it { expect(subject.to_h).to include(summary: '')}
       it { expect(subject.to_h).to include(usage: '')}
+      it { expect(subject.to_h).to include(usage_description: '')}
+    end
+
+    context 'usecase has summary' do
+      let(:usecase_with_attibutes) { double("ExampleGroup",
+                                        metadata: { usecase: true, summary: 'My summary' },
+                                        example_group: descendant_parents,
+                                        descendants: []) }
+
+      it { is_expected.to have_attributes(summary: 'My summary') }
+
+      it { expect(subject.to_h).to include(summary: 'My summary')}
     end
 
     context 'usecase has usage' do
-      let(:usecase_with_usage) { double("ExampleGroupUsecase",
+      let(:usecase_with_attibutes) { double("ExampleGroup",
                                         metadata: { usecase: true, usage: 'MyClass.load' },
                                         example_group: descendant_parents,
                                         descendants: []) }
@@ -82,55 +99,63 @@ RSpec.describe KUsecases::Usecase do
 
       it { expect(subject.to_h).to include(usage: 'MyClass.load')}
     end
+
+    context 'usecase has usage description' do
+      let(:usecase_with_attibutes) { double("ExampleGroup",
+                                        metadata: { usecase: true, usage_description: 'MyClass.load - description' },
+                                        example_group: descendant_parents,
+                                        descendants: []) }
+
+      it { is_expected.to have_attributes(usage_description: 'MyClass.load - description') }
+
+      it { expect(subject.to_h).to include(usage_description: 'MyClass.load - description')}
+    end
   end
 
   describe 'build_content' do
-    before { subject.build_content(usecase_with_content) }
+    # before { subject.parse(usecase_with_content) }
+    subject { described_class.parse('key1', usecase_with_content) }
 
     context 'usecase has no content' do
 
-      let(:usecase_with_content) { double("ExampleGroupUsecase", 
+      let(:usecase_with_content) { double("ExampleGroup", 
                                         metadata: { usecase: true },
                                         example_group: descendant_parents,
+                                        examples: [],
                                         descendants: []) }
 
-      it { is_expected.to have_attributes(content_blocks: []) }
+      it { is_expected.to have_attributes(contents: []) }
 
-      it { expect(subject.to_h).to include(content_blocks: [])}
+      it { expect(subject.to_h).to include(contents: [])}
     end
 
     context 'usecase has content' do
-      let(:content1) { { title: 'title 1', description: 'description 1', type: :code, code_type: :ruby} }
-      let(:content2) { { title: 'title 2', description: 'description 2'} }
-      let(:usecase_with_content) { double("ExampleGroupUsecase",
-                                        metadata: { usecase: true, content: [content1, content2] },
+      let(:usecase_with_content) { double("ExampleGroup",
+                                        metadata: { usecase: true },
                                         example_group: descendant_parents,
+                                        examples: [
+                                          create_content_outcome1,
+                                          create_content_code1],
                                         descendants: []) }
 
-      it 'content is valid' do 
-        expect(subject.content_blocks).to match_array([
-          have_attributes(title: 'title 1', description: 'description 1', type: :code, code_type: :ruby),
-          have_attributes(title: 'title 2', description: 'description 2', type: :text, code_type: '')
-        ]) 
+      it 'has correct content count' do 
+        expect(subject.contents.length).to eq(2) 
       end
-      # it do 
-      #   puts JSON.pretty_generate(subject.to_h)
-      # end
       
-      it { expect(subject.to_h).to include("content_blocks": [
+      it { expect(subject.to_h).to include("contents": [
         {
-          "title": "title 1",
-          "description": "description 1",
-          "type": :code,
-          "code_type": :ruby
+          "title": "outcome 1",
+          "summary": "outcome summary 1",
+          "type": "outcome",
+          "options": default_options
         },
         {
-          "title": "title 2",
-          "description": "description 2",
-          "type": :text,
-          "code_type": ""
-        }
-      ])}
+          "title": "code 1",
+          "code": "code summary 1",
+          "type": "code",
+          "code_type": "ruby",
+          "options": default_options
+        }])}
     end
   end
 end

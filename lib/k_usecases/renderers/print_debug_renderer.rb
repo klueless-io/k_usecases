@@ -7,32 +7,31 @@ module KUsecases
       def render(documentor)
         @output = ''
         write_line '*' * 100
-        write_line "Title       : #{documentor.title}" if documentor.title
-        write_line "Description : #{documentor.description}" if documentor.description
+        write_line "Title             : #{documentor.title}" if documentor.title
+        write_line "Description       : #{documentor.description}" if documentor.description
         documentor.usecases.each { |usecase| print_usecase(usecase) }
         puts @output
       end
 
       def print_usecase(usecase)
         write_line '=' * 100
-        write_line "Key         : #{usecase.key}" if usecase.key
-        write_line "Title       : #{usecase.title}" if usecase.title
-        write_line "Usage       : #{usecase.usage}" if usecase.usage
+        write_line "Key               : #{usecase.key}" if usecase.key
+        write_line "Title             : #{usecase.title}" if usecase.title
+        write_line "Usage             : #{usecase.usage}" if usecase.usage
+        write_line "Usage Description : #{usecase.usage_description}" if usecase.usage_description
 
-        if usecase.outcomes.length > 0
-          write_line '-' * 100
-          usecase.outcomes.each_with_index do |outcome|
-            write_line "Outcome     : #{outcome.description}" if outcome.description
-          end
-        end
-
-        if usecase.content_blocks.length > 0
-          usecase.content_blocks.each_with_index do |content_block|
+        if usecase.contents.length > 0
+          usecase.contents.each_with_index do |content|
             write_line '-' * 100
-            write_line "Title       : #{content_block.title}" if content_block.title
-            write_line "Description : #{content_block.description}" if content_block.description
-            write_line "Type        : #{content_block.type}" if content_block.type
-            write_line "Code Type   : #{content_block.code_type}" if content_block.code_type
+            write_line "Title             : #{content.title}" if content.title != ''
+            write_line "Type              : #{content.type}" if content.type != ''
+
+            # Used by outcome
+            write_line "Summary           : #{content.summary}" if content.respond_to?('summary') && content.summary != ''
+
+            # Used by code
+            write_line "Code              : #{content.code}" if content.respond_to?('code') && content.code != ''
+            write_line "Code Type         : #{content.code_type}" if content.respond_to?('code_type') && content.code_type != ''
           end
         end
       end

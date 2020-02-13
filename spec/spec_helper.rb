@@ -21,13 +21,11 @@ RSpec.configure do |config|
   # Usecase Documentator
   # ----------------------------------------------------------------------
 
-  config.alias_example_group_to :usecase, usecase: true
-  config.alias_example_to :code, code: true, content_block: true
+  KUsecases.configure(config)
 
   config.include UsecaseExamples
   config.extend KUsecases
 
-  # config.include KUsecases
   config.before(:context, :usecases) do
 
     # puts self.class.children
@@ -47,9 +45,7 @@ RSpec.configure do |config|
     # puts '# -parent_groups--------------------------------------------------------'
     # puts self.class.parent_groups
     # puts '# ----------------------------------------------------------------------'
-    if self.class.metadata[:usecases] == true
-      @documentor = KUsecases::Documentor.new(self.class)
-    end
+    @documentor = KUsecases::Documentor.new(self.class)
   end
 
   config.after(:context, :usecases) do

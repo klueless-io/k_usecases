@@ -5,28 +5,29 @@ module KUsecases
   class Usecase
     attr_reader :key
     attr_reader :title
+    attr_reader :summary
     attr_reader :usage
-    attr_reader :outcomes
-    attr_reader :content_blocks
+    attr_reader :usage_description
+    attr_reader :contents
 
     def initialize(key)
       @key = key
       @title = ''
+      @summary = ''
       @usage = ''
-      @outcomes = []
-      @content_blocks = []
+      @usage_description = ''
+      @contents = []
     end
 
     def self.parse(key, data)
       usecase = Usecase.new(key)
 
       usecase.build_title(data)
-      usecase.build_usage(data)
-      usecase.build_content(data)
+      usecase.build_attributes(data)
 
       # Loop through the it blocks
       data.examples.each do |it|
-        usecase.add_outcome(it)
+        usecase.add_content(it)
       end
 
       usecase
@@ -36,36 +37,23 @@ module KUsecases
       { 
         key: key,
         title: title,
+        summary: summary,
         usage: usage,
-        outcomes: outcomes.map { |outcome| outcome.to_h },
-        content_blocks: content_blocks.map { |block| block.to_h }
+        usage_description: usage_description,
+        contents: contents.map { |content| content.to_h }
       }
     end
 
-    # def print
-    #   puts description
-    #   puts
-    #   puts 'Usage:'
-    #   puts "  #{usage}"
-    #   puts
-    #   puts 'Expected Outcomes:'
-    #   outcomes.each(&:print)
-    #   puts
-    #   content_blocks.each(&:print)
-    #   puts '-' * 120
-    # end
-
-    def add_outcome(example)
-      outcome = KUsecases::Outcome.parse(example)
-      @outcomes << outcome unless outcome.nil?
+    def add_content(example)
+      content = KUsecases::Content.parse(example)
+      @contents << content unless content.nil?
     end
 
-    def build_content(example_group)
-      @content_blocks = KUsecases::ContentBlock.parse(example_group)
-    end
+    def build_attributes(example_group)
+      @summary = example_group.metadata[:summary] if example_group.metadata[:summary]
 
-    def build_usage(example_group)
       @usage = example_group.metadata[:usage] if example_group.metadata[:usage]
+      @usage_description = example_group.metadata[:usage_description] if example_group.metadata[:usage_description]
     end
 
     def build_title(example_group)
