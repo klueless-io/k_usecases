@@ -12,6 +12,7 @@
 /bin/runonce/
 k_usecases.yml
 
+/docs
 /.bundle/
 /.history/
 /.yardoc

@@ -2,9 +2,13 @@ module KUsecases
   module Renderers
     class GenerateMarkdownRenderer < BaseRenderer
       attr_reader :file
+      attr_reader :prettier
+      attr_reader :open
 
       def initialize(metadata)
         @file = metadata[:markdown_file] || 'generate_markdown.md'
+        @prettier = metadata[:markdown_prettier] || false
+        @open = metadata[:markdown_open] || false
       end
 
       def render(documentor)
@@ -16,10 +20,13 @@ module KUsecases
 
         documentor.usecases.each { |usecase| print_usecase(usecase) }
 
+        write_file(file)
+        prettier_file(file) if prettier
+        open_file_in_vscode(file) if open
+
         # puts @output
-        puts file
-        File.write(file, @output)
-        system "code #{file}"
+        # puts file
+        # system "code #{file}"
       end
 
       def h1(title)
@@ -38,44 +45,69 @@ module KUsecases
         write_line("#### #{title}") if title != ''
       end
 
+      def h5(title)
+        write_line("##### #{title}") if title != ''
+      end
+
+      def h6(title)
+        write_line("###### #{title}") if title != ''
+      end
+
+      def hr
+        write_line '---'
+      end
+
       def print_usecase(usecase)
         h2 usecase.title
         write_lf
 
         unless usecase.usage == ''
-          h3 'Usage'
-          write_line usecase.usage
+          # h3 'Usage'
+          h3 usecase.usage
+          write_line usecase.usage_description
           write_lf
         end
 
-        if usecase.outcomes.length > 0
-          # write_line '-' * 100
-          h3 'Outcome'
-          usecase.outcomes.each_with_index do |outcome|
-            write_line "- #{outcome.description}"
-          end
-          write_lf
-        end
+        # if usecase.outcomes.length > 0
+        #   # write_line '-' * 100
+        #   h3 'Outcome'
+        #   usecase.outcomes.each_with_index do |outcome|
+        #     write_line "- #{outcome.description}"
+        #   end
+        #   write_lf
+        # end
 
-        if usecase.content_blocks.length > 0
+        if usecase.contents.length > 0
           
-          usecase.content_blocks.each_with_index do |content_block|
-            write_line '---'
+          usecase.contents.each_with_index do |content|
+            
+            write_line '---' if content.is_hr
 
-            h3 content_block.title
-
-            if content_block.code_type == ''
-              write_line content_block.description
-            else
-              write_line "```#{content_block.code_type}"
-              write_line content_block.description
-              write_line '```'
-            end
-            # write_line "Type        : #{content_block.type}" if content_block.type
-            # write_line "Code Type   : #{content_block.code_type}" if content_block.code_type
+            render_outcome(content) if content.type == 'outcome'
+            render_code(content) if content.type == 'code'
           end
         end
       end
-    end
-  end
+
+      def render_outcome(content)
+        h4 content.title
+        write_line content.summary if content.summary
+      end
+
+      def render_code(content)
+        if content.code == ''
+          render_code_block(content.title, content.code_type)
+        else
+          h4 content.title
+          render_code_block(content.code, content.code_type)
+        end
+      end
+
+      def render_code_block(code, code_type)
+        write_line "```#{code_type}"
+        write_line code
+        write_line '```'
+      end
+   end
+ end
 end

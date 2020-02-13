@@ -2,10 +2,12 @@
 
 RSpec.describe Array, 
                :usecases,
-               :jsonX,
+               :json,
                :debugX,
-               :markdown,
-               markdown_file: 'samples.md',
+               :markdownX,
+               :markdown_prettier,
+               :markdown_open,
+               markdown_file: 'docs/samples.md',
                document_title: 'Document Title',
                document_description: 'Document Descrition' do
 
@@ -14,6 +16,7 @@ RSpec.describe Array,
 
     usecase 'basics',
             usage: "#{described_class.name}.load",
+            usage_description: '#{described_class.name}.load - description goes here',
             content: [{
               title: 'Initialize an array',
               description: 'ar = [1,2,3]',
@@ -25,12 +28,18 @@ RSpec.describe Array,
               code_type: :ruby
             }] do
 
-      it 'AAAAAA' do
+      code 'Initialize an array' do
+      end
+
+      code 'Push to array' do
+      end
+
+      outcome 'AAAAAA' do
         ar = [1,2,3]
         expect(ar).to match_array([1, 2, 3])
       end
 
-      it 'BBBBBB' do
+      outcome 'BBBBBB' do
         ar = [1,2,3]
         ar << 4
         expect(ar).to match_array([1, 2, 3, 4])
@@ -40,7 +49,7 @@ RSpec.describe Array,
     usecase 'Overwrite the title',
             usage: "#{described_class.name}.load",
             title: 'Default.load will load your application configuration from your `.env` file found in the project root' do
-      it 'aaaa' do
+      outcome 'aaaa' do
         # puts @document
       end
     end
@@ -54,7 +63,7 @@ RSpec.describe Array,
           
         end
 
-        it 'xxxxx' do
+        outcome 'xxxxx' do
         end
       end
 

@@ -27,6 +27,10 @@ RSpec.describe KUsecases::Renderers::GenerateMarkdownRenderer do
       it { is_expected.to have_attributes(file: 'generate_markdown.md') }
     end
 
+    context 'no prettier flag' do
+      it { is_expected.to have_attributes(prettier: false) }
+    end
+
     context 'with markdown file' do
       let(:documentor_settings) { {
         usecases: true,
@@ -40,21 +44,73 @@ RSpec.describe KUsecases::Renderers::GenerateMarkdownRenderer do
   describe 'render' do
     subject { renderer.render(documentor) }
 
-    it 'should print some content' do
-      subject
-    end
-
     context 'write to file' do
+      
       let(:documentor_settings) { {
         usecases: true,
         markdown: true,
-        markdown_file: "#{Tempfile.new.path}.md" } }
+        markdown_file: "docs/samples/sample.md" } }
 
       it 'should write content to file' do
         subject
-        puts renderer.file
-        system("code #{renderer.file}")
+        expect(File.exist?(renderer.file)).to eq(true)
+        # puts renderer.file
+        # system("code #{renderer.file}")
       end
+
+      it 'should have raw content' do
+        subject
+        expect(File.foreach(renderer.file).take(7)).to eq(["\n", 
+                                                   "## A B C Default Title\n",
+                                                   "\n",
+                                                   "## My custom title\n",
+                                                   "\n",
+                                                   "### MyClass.load\n",
+                                                   "My custom usage description\n"] )
+      end
+    end
+
+    context 'write to file and make prettier' do
+      
+      let(:documentor_settings) { {
+        usecases: true,
+        markdown: true,
+        markdown_prettier: true,
+        markdown_file: "docs/samples/sample-pretty.md" } }
+
+      it 'prettier flag' do
+        expect(renderer).to have_attributes(prettier: true)
+      end
+
+      it 'should have pretty content' do
+        subject
+        # system("code #{renderer.file}")
+
+        expect(File.foreach(renderer.file).take(7)).to eq(["## A B C Default Title\n",
+                                                           "\n",
+                                                           "## My custom title\n",
+                                                           "\n",
+                                                           "### MyClass.load\n",
+                                                           "\n",
+                                                           "My custom usage description\n"] )
+      end
+    end
+
+    context 'write to file and open in vscode' do
+      
+      let(:documentor_settings) { {
+        usecases: true,
+        markdown: true,
+        markdown_file: "docs/samples/pretty.md",
+        markdown_open: true } }
+
+      it 'open flag' do
+        expect(renderer).to have_attributes(open: true)
+      end
+
+      # it 'should open file in vscode' do
+      #   subject
+      # end
     end
   end
 end

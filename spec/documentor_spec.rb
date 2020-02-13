@@ -20,6 +20,7 @@ RSpec.describe KUsecases::Documentor do
   # puts example.description
 
   subject { described_class.new(example_group) }
+  let(:default_options) { [{'is_hr': false}] }
 
   # This needs to move into context
   let(:documentor_settings) { }
@@ -69,11 +70,12 @@ RSpec.describe KUsecases::Documentor do
 
         it 'should have valid json' do
           expect(subject.to_h[:usecases]).to eq([{
-            content_blocks: [],
+            contents: [],
             key: "usecase1",
-            outcomes: [],
             title: "A B C Default Title",
-            usage: ""
+            summary: '',
+            usage: '',
+            usage_description: ''
           }])
         end
       end
@@ -104,19 +106,28 @@ RSpec.describe KUsecases::Documentor do
           expect(subject.to_h[:usecases]).to eq([{
             key: 'usecase1',
             title: 'A B C Default Title',
+            summary: '',
             usage: '',
-            outcomes: [],
-            content_blocks: []
+            usage_description: '',
+            contents: []
           }, {
             title: 'My custom title',
+            summary: 'My usecase summary',
             usage: 'MyClass.load',
+            usage_description: 'My custom usage description',
             key: 'usecase2',
-            outcomes: [{
-              description: 'Expected outcome 1'
+            contents: [{
+              title: 'outcome 1',
+              summary: 'outcome summary 1',
+              type: 'outcome',
+              options: default_options
             }, {
-              description: 'Expected outcome 2'
-            }],
-            content_blocks: []
+              title: 'code 1',
+              code: 'code summary 1',
+              type: 'code',
+              code_type: 'ruby',
+              options: default_options
+            }]
           }])
         end
       end

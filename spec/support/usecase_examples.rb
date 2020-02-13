@@ -36,14 +36,16 @@ module UsecaseExamples
       metadata: { 
         usecase: true,
         usage: 'MyClass.load',
-        title: 'My custom title'
+        usage_description: 'My custom usage description',
+        title: 'My custom title',
+        summary: 'My usecase summary'
       },
       name: 'usecase2',
       example_group: descendant_parents,
       descendants: [],
       examples: [
-        double('Example', description: 'Expected outcome 1', metadata: {}),
-        double('Example', description: 'Expected outcome 2', metadata: {})
+        create_content_outcome1,
+        create_content_code1
       ]) 
   end
 
@@ -51,24 +53,36 @@ module UsecaseExamples
     double("ExampleGroupUsecase",
       metadata: { 
         usecase: true,
-        usage: 'MyClass.load',
         title: 'My custom title with content examples',
-        content: [content1, content2]
+        usage: 'MyClass.load',
+        usage_description: 'MyClass.load - description goes here'
       },
       name: 'usecase3',
       example_group: descendant_parents,
       descendants: [],
       examples: [
-        double('Example', description: 'Expected outcome A', metadata: {}),
-        double('Example', description: 'Expected outcome B', metadata: {})
+        create_content_outcome1,
+        create_content_code1
       ]) 
   end
 
-  def create_content1
-    { title: 'title 1', description: 'description 1', type: :code, code_type: :ruby}
+  def create_content_outcome1
+    double('Example',
+           description: 'outcome 1',
+           metadata: {
+             summary: 'outcome summary 1',
+             content_type: :outcome
+           })
   end
-  def create_content2
-    { title: 'title 2', description: 'description 2'}
+
+  def create_content_code1
+    double('Example',
+           description: 'code 1',
+           metadata: {
+             code: 'code summary 1',
+             content_type: :code,
+             code_type: :ruby
+           })
   end
   
 end
