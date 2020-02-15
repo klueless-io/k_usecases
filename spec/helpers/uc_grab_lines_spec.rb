@@ -33,6 +33,23 @@ RSpec.describe 'KUsecases::Helpers.uc_grab_lines' do
 
       it { is_expected.to match_array(['line 1', '', 'line 4', 'line 5']) }
     end
+
+    context 'when line number is' do
+      let(:lines_to_include) { [0, 1] }
+
+      it 'to low' do
+        expect { subject }.to raise_error(StandardError, 'Line numbers must start from 1')
+      end
+    end
+
+    context 'when line number is' do
+      let(:lines_to_include) { [1, 6] }
+
+      it 'to high' do
+        expect { subject }.to raise_error(StandardError, 'Line number out of range - content_length: 5 - line_no: 6')
+      end
+    end
+
   end
 
   def as_array(text)
