@@ -52,3 +52,8 @@ RSpec.configure do |config|
     @documentor.render
   end
 end
+
+def fixture_path(name)
+  File.join(File.expand_path("../fixtures", __FILE__), name)
+end
+
