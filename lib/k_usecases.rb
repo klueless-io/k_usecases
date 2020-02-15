@@ -11,7 +11,9 @@ require 'k_usecases/renderers/base_renderer'
 require 'k_usecases/renderers/generate_markdown_renderer'
 require 'k_usecases/renderers/print_debug_renderer'
 require 'k_usecases/renderers/print_json_renderer'
-require 'k_usecases/helpers/uc_add_content'
+require 'k_usecases/helpers/uc_file_content'
+require 'k_usecases/helpers/uc_grab_lines'
+require 'k_usecases/helpers/uc_block_content'
 
 module KUsecases
   class Error < StandardError; end

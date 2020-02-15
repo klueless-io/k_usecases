@@ -53,6 +53,10 @@ module KUsecases
         write_line("###### #{title}") if title != ''
       end
 
+      def bullet(title)
+        write_line("- #{title}") if title != ''
+      end
+
       def hr
         write_line '---'
       end
@@ -90,7 +94,7 @@ module KUsecases
       end
 
       def render_outcome(content)
-        h4 content.title
+        bullet content.title
         write_line content.summary if content.summary
       end
 
