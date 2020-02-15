@@ -2,11 +2,11 @@
 
 RSpec.describe Array, 
                :usecases,
-               :json,
+               :jsonX,
                :debugX,
                :markdownX,
                :markdown_prettier,
-               :markdown_open,
+               :markdown_openX,
                markdown_file: 'docs/samples.md',
                document_title: 'Document Title',
                document_description: 'Document Descrition' do
