@@ -72,15 +72,6 @@ module KUsecases
           write_lf
         end
 
-        # if usecase.outcomes.length > 0
-        #   # write_line '-' * 100
-        #   h3 'Outcome'
-        #   usecase.outcomes.each_with_index do |outcome|
-        #     write_line "- #{outcome.description}"
-        #   end
-        #   write_lf
-        # end
-
         if usecase.contents.length > 0
           
           usecase.contents.each_with_index do |content|
@@ -99,17 +90,17 @@ module KUsecases
       end
 
       def render_code(content)
-        if content.code == ''
-          render_code_block(content.title, content.code_type)
+        if content.source == ''
+          h4 content.title
         else
           h4 content.title
-          render_code_block(content.code, content.code_type)
+          render_code_block(content.source, content.code_type)
         end
       end
 
-      def render_code_block(code, code_type)
+      def render_code_block(source, code_type)
         write_line "```#{code_type}"
-        write_line code
+        write_line source
         write_line '```'
       end
    end

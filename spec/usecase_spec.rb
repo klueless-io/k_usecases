@@ -142,20 +142,22 @@ RSpec.describe KUsecases::Usecase do
         expect(subject.contents.length).to eq(2) 
       end
       
-      it { expect(subject.to_h).to include("contents": [
+      it { expect(subject.to_h[:contents]).to include(
         {
           "title": "outcome 1",
+          "source": "",
           "summary": "outcome summary 1",
           "type": "outcome",
           "options": default_options
-        },
+        })}
+      it { expect(subject.to_h[:contents]).to include(
         {
           "title": "code 1",
-          "code": "code summary 1",
           "type": "code",
           "code_type": "ruby",
+          "source": "code summary 1",
           "options": default_options
-        }])}
+        })}
     end
   end
 end
