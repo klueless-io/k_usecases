@@ -9,6 +9,7 @@ module KUsecases
     
     config.alias_example_to :code       , content_type: :code
     config.alias_example_to :ruby       , content_type: :code, code_type: :ruby
+    config.alias_example_to :fruby      , content_type: :code, code_type: :ruby       , focus: :true
     config.alias_example_to :css        , content_type: :code, code_type: :css
     config.alias_example_to :js         , content_type: :code, code_type: :javascript
     config.alias_example_to :javascript , content_type: :code, code_type: :javascript
