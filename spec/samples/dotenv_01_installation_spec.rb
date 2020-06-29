@@ -6,7 +6,7 @@ RSpec.describe 'dotenv',
                :debugX,
                :markdown,
                :markdown_prettier,
-               :markdown_openX,
+               :markdown_open,
                markdown_file: 'docs/samples/docenv-installation.md',
                document_title: 'dotenv',
                document_description: '' do
@@ -17,6 +17,9 @@ RSpec.describe 'dotenv',
   usecase '', title: 'Overview' do
     content '', summary: uc_file_content(src_readme, lines: [*(3..42)]) do
       
+    end
+
+    css 'xyz', code: '.a { color: blue }' do
     end
   end
 end

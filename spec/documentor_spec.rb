@@ -118,12 +118,13 @@ RSpec.describe KUsecases::Documentor do
             key: 'usecase2',
             contents: [{
               title: 'outcome 1',
+              source: '',
               summary: 'outcome summary 1',
               type: 'outcome',
               options: default_options
             }, {
               title: 'code 1',
-              code: 'code summary 1',
+              source: 'code summary 1',
               type: 'code',
               code_type: 'ruby',
               options: default_options

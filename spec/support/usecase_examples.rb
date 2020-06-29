@@ -79,9 +79,9 @@ module UsecaseExamples
     double('Example',
            description: 'code 1',
            metadata: {
-             code: 'code summary 1',
              content_type: :code,
-             code_type: :ruby
+             code_type: :ruby,
+             block: double(source: 'ruby "xyz" do code summary 1 end')
            })
   end
   

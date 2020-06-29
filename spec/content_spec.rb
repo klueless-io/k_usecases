@@ -33,8 +33,13 @@ RSpec.describe KUsecases::Content do
     context 'with data for valid content' do
 
       context 'when blank description is overwritten by rspec' do
-        let(:example) { double(description: 'example at ./spec/', metadata: { content_type: :outcome }) }
-
+        let(:example) { 
+          double(description: 'example at ./spec/',
+                metadata: { 
+                  content_type: :outcome,
+                  block: double(source: '')
+                }) }
+      
         it { is_expected.to be_a (KUsecases::ContentOutcome)}
         it { is_expected.to have_attributes(title: '') }
       end
@@ -42,17 +47,27 @@ RSpec.describe KUsecases::Content do
       context 'when content_type: :outcome' do
         # NOTE: What rspec calls a description, I call a title
         #       rspec.description maps to content.title 
-        let(:example) { double(description: 'david', metadata: { content_type: :outcome }) }
+        let(:example) { double(description: 'david', 
+                               metadata: { 
+                                 content_type: :outcome,
+                                 block: double(source: '')
+                               }) }
 
         it { is_expected.to be_a (KUsecases::ContentOutcome)}
         it { is_expected.to have_attributes(title: 'david',
+                                            source: '',
                                             summary: '',
                                             type: 'outcome'
                                            ) }
       end
 
       context 'when content_type: :outcome with description' do
-        let(:example) { double(description: 'david', metadata: { content_type: :outcome, summary: 'my summary' }) }
+        let(:example) { double(description: 'david',
+                               metadata: {
+                                 content_type: :outcome,
+                                 summary: 'my summary',
+                                 block: double(source: '')
+                              }) }
 
         it { is_expected.to be_a (KUsecases::ContentOutcome)}
         it { is_expected.to have_attributes(title: 'david',
@@ -61,14 +76,18 @@ RSpec.describe KUsecases::Content do
                                           ) }
       end
 
-      context 'when content_type: :outcome' do
-        let(:example) { double(description: 'david', metadata: { content_type: :code, code: 'some code', code_type: 'ruby' }) }
+      context 'when content_type: :code' do
+        let(:example) { double(description: 'david',
+                               metadata: {
+                                 content_type: :code,
+                                 code_type: 'ruby',
+                                 block: double(source: 'ruby "xyz" do some code end') }) }
 
         it { is_expected.to be_a (KUsecases::ContentCode)}
         it { is_expected.to have_attributes(title: 'david',
-                                            type: 'code',
-                                            code: 'some code',
-                                            code_type: 'ruby'
+                                             type: 'code',
+                                             source: 'some code',
+                                             code_type: 'ruby'
                                           ) }
       end
     end

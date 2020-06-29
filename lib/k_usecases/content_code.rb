@@ -15,7 +15,6 @@ module KUsecases
 
     def to_h
       {
-        code: code,
         code_type: code_type,
       }.merge(super.to_h)
     end
