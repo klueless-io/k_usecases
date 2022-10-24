@@ -18,7 +18,6 @@ module KUsecases
     config.alias_example_to :content    , content_type: :outcome
     config.alias_example_to :outcome    , content_type: :outcome
 
-
     config.extend KUsecases::Helpers
   end
 end

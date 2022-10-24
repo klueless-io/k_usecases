@@ -1,0 +1,32 @@
+/bin/runonce/
+k_usecases.yml
+
+/.bundle/
+/.history/
+/.yardoc
+/_yardoc/
+/coverage/
+/log/
+!/log/.keep
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+!/tmp/.keep
+*.bundle
+*.so
+*.o
+*.a
+mkmf.log
+
+# Environment File
+.env
+
+# Gems should not use a Gemfile.lock
+Gemfile.lock
+
+# rspec failure tracking
+.rspec_status
+
+# ByeBug history
+.byebug_history

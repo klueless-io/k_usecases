@@ -4,7 +4,7 @@ module KUsecases
   # Content block
   class Content
     EXTRACT_CONTENT_REX = /
-      ^                                     # begining of string
+      ^                                     # beginning of string
       (?<indent>\s*)                        # find the indent before the method
     
       (?<method_type>(outcome|code|ruby)\s) # grab the method name from predefined list
@@ -60,11 +60,18 @@ module KUsecases
       yield self if block_given?
     end
 
-    # Have not write a test for this yet
+    # Have not written a test for this yet
     def parse_block_source(example)
+      @debug = false
+
       # Source code for rspec is living on the metadata[:block].source location
       unless defined?(example.metadata) && defined?(example.metadata[:block]) && defined?(example.metadata[:block].source)
         @source = ''
+        return
+      end
+
+      unless example.metadata[:source_override].nil?
+        @source = example.metadata[:source_override]
         return
       end
       
@@ -77,6 +84,7 @@ module KUsecases
         return
       end
       @source = remove_wasted_indentation(segments[:content])
+      @source
     end
 
     def remove_wasted_indentation(content)
@@ -86,17 +94,17 @@ module KUsecases
 
       # find the small whitespace sequence 
       # at beginning of line that is not \n or blank
-      # and grap the smallest value
+      # and grab the smallest value
       indent = lines
         .map    { |l| l.match(whitespace).to_s }
         .reject { |s| s == "\n" || s == '' }
         .min_by(&:length)
 
-      # remove the smallet indentation from beginning 
+      # remove the smallest indentation from beginning 
       # of all lines, this is the wasted indentation
       rex_indent = /^#{indent}/
 
-      lines = lines.map { |l| l.gsub!(rex_indent, '') }
+      lines.each { |l| l.gsub!(rex_indent, '') }
 
       # convert back to a content string
       lines.join.strip

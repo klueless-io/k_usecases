@@ -4,18 +4,18 @@ RSpec.describe Array,
                :usecases,
                :json,
                :debugX,
-               :markdownX,
-               :markdown_prettier,
-               :markdown_openX,
+               :markdown,
+               :markdown_prettierX,
+               :markdown_open,
                markdown_file: 'docs/samples.md',
                document_title: 'Document title',
-               document_description: 'Document descrition' do
+               document_description: 'Document description' do
 
   describe 'load' do
     subject { described_class.load() }
 
     usecase 'basics',
-            usage: "#{described_class.name}.load",
+            usage: "#{described_class.name}.loadxxx",
             usage_description: "#{described_class.name}.load - description goes here" do
 
       ruby 'Initialize an array', :hr,
@@ -32,9 +32,9 @@ RSpec.describe Array,
         end
       end
 
-      # ruby '',
-      #   code: 'ar << 4' do
-      # end
+      ruby '',
+        code: 'ar << 4' do
+      end
 
       # css '',
       #   code: 'a { color: "blue" }' do

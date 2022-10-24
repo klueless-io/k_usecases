@@ -15,7 +15,12 @@ module KUsecases
       end
 
       def prettier_file(file)
-        system("prettier --check #{file} --write #{file}")
+        # npm install -g prettier @prettier/plugin-ruby
+
+        cmd = "prettier --check #{file} --write #{file}"
+
+        puts cmd
+        system(cmd)
       end
 
       def open_file_in_vscode(file)

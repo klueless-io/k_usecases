@@ -64,12 +64,19 @@ module KUsecases
       def print_usecase(usecase)
         h2 usecase.title
         write_lf
+        if usecase.summary
+          write_line usecase.summary
+          write_lf
+        end
 
         unless usecase.usage == ''
           # h3 'Usage'
           h3 usecase.usage
-          write_line usecase.usage_description
           write_lf
+          if usecase.usage_description
+            write_line usecase.usage_description
+            write_lf
+          end
         end
 
         if usecase.contents.length > 0
@@ -90,12 +97,9 @@ module KUsecases
       end
 
       def render_code(content)
-        if content.source == ''
-          h4 content.title
-        else
-          h4 content.title
-          render_code_block(content.source, content.code_type)
-        end
+        h4 content.title
+        write_line content.summary if content.summary
+        render_code_block(content.source, content.code_type) unless content.source == ''
       end
 
       def render_code_block(source, code_type)

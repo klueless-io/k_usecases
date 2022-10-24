@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module KUsecases
-  # Grab lines from content to lines and then extrat specific lines
+  # Grab lines from content into lines array and then extract specific lines
   module Helpers
     # Grab specific lines from the content
     # 

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module KUsecases
-  # KTG Document
   class Usecase
     attr_reader :key
     attr_reader :title

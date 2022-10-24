@@ -8,38 +8,42 @@ RSpec.describe Array,
                :markdown_prettier,
                :markdown_open,
                markdown_file: 'docs/samples.md',
-               document_title: 'Document Title',
-               document_description: 'Document Descrition' do
+               document_title: 'Usage Samples',
+               document_description: 'Some examples of how to use Rspec::Usage' do
 
   describe 'load' do
     subject { described_class.load() }
 
     usecase 'basics',
             usage: "#{described_class.name}.load",
-            usage_description: '#{described_class.name}.load - description goes here',
-            content: [{
-              title: 'Initialize an array',
-              description: 'ar = [1,2,3]',
-              type: :code,
-              code_type: :ruby
-            }, {
-              title: 'Push to array',
-              description: 'ar << 4',
-              code_type: :ruby
-            }] do
+            usage_description: "#{described_class.name}.load - description goes here" do
 
-      code 'Initialize an array' do
+      ruby 'Initialize an array' do
+        ar = [1, 2, 3]
       end
 
-      code 'Push to array' do
+      ruby do
+        ar = [1, 2, 3]
+
+        expect(ar).to match_array([1, 2, 3])
       end
 
-      outcome 'AAAAAA' do
+      ruby do
+        # 1
+        # 2
+        # 3
+      end
+
+      ruby 'Push to array' do
+        # ar << 4
+      end
+
+      code do
         ar = [1,2,3]
         expect(ar).to match_array([1, 2, 3])
       end
 
-      outcome 'BBBBBB' do
+      code do
         ar = [1,2,3]
         ar << 4
         expect(ar).to match_array([1, 2, 3, 4])

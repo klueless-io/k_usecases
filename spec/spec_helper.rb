@@ -18,7 +18,7 @@ RSpec.configure do |config|
   end
 
   # ----------------------------------------------------------------------
-  # Usecase Documentator
+  # Usecase Documentor
   # ----------------------------------------------------------------------
 
   KUsecases.configure(config)

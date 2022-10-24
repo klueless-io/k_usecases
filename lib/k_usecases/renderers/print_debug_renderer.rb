@@ -32,6 +32,7 @@ module KUsecases
             # Used by code
             write_line "Code              : #{content.code}" if content.respond_to?('code') && content.code != ''
             write_line "Code Type         : #{content.code_type}" if content.respond_to?('code_type') && content.code_type != ''
+            write_line content.source if content.respond_to?('source') && content.source != ''
           end
         end
       end

@@ -7,7 +7,7 @@ RSpec.describe 'dotenv',
                :markdown,
                :markdown_prettier,
                :markdown_openX,
-               markdown_file: 'docs/samples/docenv-load.md',
+               markdown_file: 'docs/samples/dotenv-load.md',
                document_title: 'dotenv',
                document_description: '' do
 

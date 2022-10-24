@@ -1,3 +1,4 @@
+require 'json'
 module KUsecases
   module Renderers
     class PrintJsonRenderer

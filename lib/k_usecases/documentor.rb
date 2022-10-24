@@ -4,7 +4,7 @@ module KUsecases
   # Documentor is the main entry point for documenting usecases
   # in RSpec.
   # 
-  # A singlton instance handles configuration and use case
+  # A singleton instance handles configuration and use case
   # management within a running :context
   class Documentor
     attr_reader :usecases

@@ -60,11 +60,11 @@ RSpec.describe KUsecases::Usecase do
   end
 
   describe 'build_attributes' do
-    before { subject.build_attributes(usecase_with_attibutes) }
+    before { subject.build_attributes(usecase_with_attributes) }
 
     context 'usecase has no extra attributes' do
 
-      let(:usecase_with_attibutes) { double("ExampleGroup", 
+      let(:usecase_with_attributes) { double("ExampleGroup", 
                                         metadata: { usecase: true },
                                         example_group: descendant_parents,
                                         descendants: []) }
@@ -79,7 +79,7 @@ RSpec.describe KUsecases::Usecase do
     end
 
     context 'usecase has summary' do
-      let(:usecase_with_attibutes) { double("ExampleGroup",
+      let(:usecase_with_attributes) { double("ExampleGroup",
                                         metadata: { usecase: true, summary: 'My summary' },
                                         example_group: descendant_parents,
                                         descendants: []) }
@@ -90,7 +90,7 @@ RSpec.describe KUsecases::Usecase do
     end
 
     context 'usecase has usage' do
-      let(:usecase_with_attibutes) { double("ExampleGroup",
+      let(:usecase_with_attributes) { double("ExampleGroup",
                                         metadata: { usecase: true, usage: 'MyClass.load' },
                                         example_group: descendant_parents,
                                         descendants: []) }
@@ -101,7 +101,7 @@ RSpec.describe KUsecases::Usecase do
     end
 
     context 'usecase has usage description' do
-      let(:usecase_with_attibutes) { double("ExampleGroup",
+      let(:usecase_with_attributes) { double("ExampleGroup",
                                         metadata: { usecase: true, usage_description: 'MyClass.load - description' },
                                         example_group: descendant_parents,
                                         descendants: []) }
